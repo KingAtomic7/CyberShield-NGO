@@ -1,28 +1,16 @@
-# CyberShield NGO – Cybersecurity Risk Assessment & Improvement Platform
+# CyberShield NGO
 
-> **Practical Cybersecurity for Resource-Constrained Non-Profit Organizations**
+> **Practical Cybersecurity Risk Assessment & Improvement Platform for Resource-Constrained Non-Profit Organizations**
 
-**EY GDS Training Project** – A comprehensive cybersecurity assessment platform designed to help small NGOs with limited budgets and IT resources assess their security posture, identify gaps, and implement prioritized improvements.
+**EY GDS Training Project** — A comprehensive cybersecurity assessment platform designed to help small NGOs with limited budgets and IT resources assess their security posture, identify gaps, and implement prioritized improvements.
 
 ---
 
-## 📋 Table of Contents
+## 📸 Dashboard Preview
 
-1. [Project Overview](#project-overview)
-2. [Problem Statement](#problem-statement)
-3. [Objectives](#objectives)
-4. [Features](#features)
-5. [Technology Stack](#technology-stack)
-6. [Architecture](#architecture)
-7. [Database Structure](#database-structure)
-8. [Risk Scoring Methodology](#risk-scoring-methodology)
-9. [Cybersecurity Maturity Model](#cybersecurity-maturity-model)
-10. [Installation & Setup](#installation--setup)
-11. [Demo Credentials](#demo-credentials)
-12. [Security Measures](#security-measures)
-13. [Limitations](#limitations)
-14. [Future Enhancements](#future-enhancements)
-15. [Presentation Guide](#presentation-guide)
+![CyberShield NGO Dashboard](dashboard-screenshot.png)
+
+*The main NGO Dashboard showing security score, risk level, maturity assessment, and category breakdown with interactive charts.*
 
 ---
 
@@ -33,6 +21,7 @@ CyberShield NGO is a web-based cybersecurity risk assessment and improvement pla
 ### Why This Matters
 
 NGOs handle sensitive donor data, beneficiary information, and financial records, making them attractive targets for cyber attacks. Yet most NGOs:
+
 - Have minimal IT budgets (often <₹5 lakh/year)
 - Have 0-1 dedicated IT staff
 - Lack formal cybersecurity policies
@@ -164,7 +153,7 @@ cybershield-ngo/
 │   │       ├── organization/  # Organization API
 │   │       ├── report/        # PDF report API
 │   │       ├── seed/          # Demo data API
-│   │       └──#health/        # Health check
+│   │       └── health/        # Health check
 │   ├── db/                    # Database
 │   │   ├── index.ts          # Drizzle client
 │   │   └── schema.ts         # All table definitions
@@ -435,40 +424,3 @@ This application implements the following security controls:
 ---
 
 *This project is developed as part of the EY GDS training program to demonstrate practical cybersecurity improvement strategies for resource-constrained non-profit organizations. All security controls implemented are defensive in nature.*
-
-
-## Database setup
-
-This project uses PostgreSQL with Drizzle ORM. The database connection is read from `DATABASE_URL`; credentials are never hardcoded in the Drizzle config.
-
-1. Install and start PostgreSQL locally.
-2. Create a database named `cybershield` (for example with pgAdmin or `psql`).
-3. Copy `.env.example` to `.env`.
-4. Replace `YOUR_POSTGRES_PASSWORD` with the password for the local `postgres` role.
-5. Install dependencies:
-
-```powershell
-npm install
-```
-
-6. Create/update the schema:
-
-```powershell
-npm run db:push
-```
-
-7. Start the application:
-
-```powershell
-npm run dev
-```
-
-If PowerShell reports `psql is not recognized`, PostgreSQL may still be installed; use pgAdmin to create the database, or run the full path to `psql.exe` from the PostgreSQL `bin` directory.
-
-### Demo seed
-
-Use the demo seed endpoint only for local development. It creates the demo accounts and sample data. The route returns a generic error response on failure and does not expose database exception details.
-
-Demo accounts:
-- System administrator: `admin` / `Admin@123`
-- NGO administrator: `ngo_admin` / `Ngo@123`
