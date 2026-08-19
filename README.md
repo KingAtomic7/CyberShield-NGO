@@ -265,41 +265,281 @@ The target maturity is always the next level above current. Each level has speci
 ## 🚀 Installation & Setup
 
 ### Prerequisites
-- Node.js 18+
-- PostgreSQL (or use the provided environment)
 
-### Steps
+Before you begin, ensure you have the following installed:
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| **Node.js** | 18+ | JavaScript runtime |
+| **npm** | 9+ | Package manager (comes with Node.js) |
+| **PostgreSQL** | 14+ | Database server |
+| **Git** | Latest | Version control |
+
+**Verify installations:**
+```bash
+node --version    # Should show v18.x.x or higher
+npm --version     # Should show 9.x.x or higher
+psql --version    # Should show 14.x or higher
+```
+
+---
+
+### Step-by-Step Setup Guide
+
+#### 1. Clone the Repository
 
 ```bash
-# 1. Clone/navigate to project directory
-cd cybershield-ngo
+# Clone the repository
+git clone https://github.com/KingAtomic7/CyberShield-NGO.git
 
-# 2. Install dependencies
-npm install
-
-# 3. Set environment variables
-# Copy .env.example to .env and set DATABASE_URL and JWT_SECRET
-# JWT_SECRET is mandatory when NODE_ENV=production
-
-# 4. Push database schema
-npx drizzle-kit push
-
-# 5. Start the application
-npm run dev
-
-# 6. Seed demo data
-# Navigate to http://localhost:3000/api/seed (POST request)
-# Or use curl: curl -X POST http://localhost:3000/api/seed
-
-# 7. Access the application
-# Open http://localhost:3000
+# Navigate to project directory
+cd CyberShield-NGO
 ```
+
+#### 2. Install Dependencies
+
+```bash
+# Install all npm packages
+npm install
+```
+
+This installs all dependencies listed in `package.json` including:
+- Next.js, React, TypeScript
+- Drizzle ORM, PostgreSQL driver
+- Chart.js, PDFKit, bcryptjs, jose (JWT)
+- Tailwind CSS, Font Awesome
+
+#### 3. Set Up PostgreSQL Database
+
+**Option A: Local PostgreSQL Installation**
+
+1. **Install PostgreSQL** (if not already installed):
+   - **Windows**: Download from [postgresql.org](https://www.postgresql.org/download/windows/)
+   - **macOS**: `brew install postgresql@15 && brew services start postgresql@15`
+   - **Linux (Ubuntu/Debian)**: `sudo apt install postgresql postgresql-contrib`
+
+2. **Create the database:**
+   ```bash
+   # Connect to PostgreSQL as superuser
+   psql -U postgres
+   
+   # Inside psql shell, create database and user
+   CREATE DATABASE cybershield;
+   CREATE USER cybershield_user WITH ENCRYPTED PASSWORD 'your_secure_password';
+   GRANT ALL PRIVILEGES ON DATABASE cybershield TO cybershield_user;
+   \q
+   ```
+
+**Option B: Using Docker (Quick Setup)**
+
+```bash
+# Run PostgreSQL in Docker
+docker run -d \
+  --name cybershield-db \
+  -e POSTGRES_DB=cybershield \
+  -e POSTGRES_USER=cybershield_user \
+  -e POSTGRES_PASSWORD=your_secure_password \
+  -p 5432:5432 \
+  postgres:15
+```
+
+**Option C: Cloud Database (Supabase, Neon, Railway, etc.)**
+
+Use the connection string provided by your cloud provider.
+
+#### 4. Configure Environment Variables
+
+```bash
+# Copy the example environment file
+cp .env.example .env
+```
+
+Edit `.env` with your actual values:
+
+```env
+# PostgreSQL connection string
+# Format: postgresql://USER:PASSWORD@HOST:PORT/DATABASE
+DATABASE_URL=postgresql://cybershield_user:your_secure_password@127.0.0.1:5432/cybershield
+
+# Required for production - generate a secure random string
+# Run: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+JWT_SECRET=your-super-secure-random-32-byte-secret-here
+
+# Optional: Set to 'production' for production deployments
+NODE_ENV=development
+```
+
+**Important Notes:**
+- `JWT_SECRET` **must be set** when `NODE_ENV=production` (app will fail to start without it)
+- For development, a fallback is used but you should still set a value
+- Generate a secure secret: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+
+#### 5. Initialize Database Schema
+
+```bash
+# Push the Drizzle schema to your database
+npx drizzle-kit push
+```
+
+This creates all tables:
+- `users`, `organizations`, `assessments`, `assessment_answers`
+- `risk_results`, `recommendations`, `roadmap_items`
+- `incidents`, `security_policies`, `kpis`, `audit_log`
+
+**Verify tables were created:**
+```bash
+psql -U cybershield_user -d cybershield -c "\dt"
+```
+
+#### 6. Start the Development Server
+
+```bash
+# Start Next.js in development mode
+npm run dev
+```
+
+You should see:
+```
+▲ Next.js 16.x.x
+- Local:        http://localhost:3000
+- Network:      http://192.168.x.x:3000
+✓ Ready in 2.3s
+```
+
+#### 7. Seed Demo Data
+
+**Option A: Via Browser**
+1. Open http://localhost:3000/api/seed in your browser
+2. Or use the seed endpoint via the UI (if available)
+
+**Option B: Via cURL (Recommended)**
+```bash
+# Seed demo organization and users
+curl -X POST http://localhost:3000/api/seed
+```
+
+**Option C: Via PowerShell (Windows)**
+```powershell
+Invoke-RestMethod -Method Post -Uri "http://localhost:3000/api/seed"
+```
+
+This creates:
+- **Demo Organization**: "Helping Hands Foundation"
+- **System Admin**: `admin` / `Admin@123`
+- **NGO Admin**: `ngo_admin` / `Ngo@123`
+- Pre-loaded assessment with realistic security gaps
+
+#### 8. Access the Application
+
+Open your browser and navigate to:
+- **Main App**: http://localhost:3000
+- **Login Page**: http://localhost:3000/login
+
+**Login with demo credentials:**
+| Role | Username | Password |
+|------|----------|----------|
+| NGO Administrator | `ngo_admin` | `Ngo@123` |
+| System Administrator | `admin` | `Admin@123` |
+
+---
+
+### 🔧 Common Commands Reference
+
+```bash
+# Development
+npm run dev              # Start dev server with hot reload
+
+# Database
+npx drizzle-kit push     # Push schema changes to DB
+npx drizzle-kit studio   # Open Drizzle Studio (DB GUI)
+npx drizzle-kit generate # Generate migration files
+npx drizzle-kit migrate  # Run migrations
+
+# Building
+npm run build            # Production build
+npm run start            # Start production server
+npm run lint             # Run ESLint
+
+# Testing (if configured)
+npm test                 # Run tests
+```
+
+---
+
+### 🐳 Docker Deployment (Optional)
+
+Create a `Dockerfile` for containerized deployment:
+
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+RUN npm run build
+
+EXPOSE 3000
+CMD ["npm", "run", "start"]
+```
+
+Build and run:
+```bash
+docker build -t cybershield-ngo .
+docker run -p 3000:3000 --env-file .env cybershield-ngo
+```
+
+---
 
 ### Production Build
 
 ```bash
+# Build for production
 npm run build
+
+# Start production server
 npm run start
+```
+
+For production deployment, ensure:
+- `NODE_ENV=production` in `.env`
+- Strong `JWT_SECRET` (32+ bytes)
+- Secure `DATABASE_URL` (SSL enabled)
+- Reverse proxy (nginx) for SSL termination
+- Process manager (PM2) for auto-restart
+
+---
+
+### Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `psql: command not found` | Add PostgreSQL `bin` directory to PATH, or use full path to `psql.exe` |
+| `DATABASE_URL` connection refused | Ensure PostgreSQL is running; check host/port; verify firewall |
+| `JWT_SECRET` error in production | Set `JWT_SECRET` in `.env` with a 32+ byte random string |
+| Port 3000 already in use | Kill existing process: `npx kill-port 3000` or change port in `package.json` |
+| Module not found errors | Delete `node_modules` and `package-lock.json`, run `npm install` again |
+| Database schema out of sync | Run `npx drizzle-kit push` again |
+| Seed fails | Check database connection; ensure tables exist; check server logs |
+
+---
+
+### Quick Start Summary
+
+For experienced developers who want the minimal steps:
+
+```bash
+git clone https://github.com/KingAtomic7/CyberShield-NGO.git
+cd CyberShield-NGO
+npm install
+cp .env.example .env
+# Edit .env with your DATABASE_URL and JWT_SECRET
+npx drizzle-kit push
+npm run dev
+# In another terminal: curl -X POST http://localhost:3000/api/seed
+# Open http://localhost:3000 and login with ngo_admin / Ngo@123
 ```
 
 ---
