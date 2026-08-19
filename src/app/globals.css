@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+/* Custom CyberShield styles */
+:root {
+  --cyber-primary: #1e40af;
+  --cyber-secondary: #3b82f6;
+  --cyber-accent: #06b6d4;
+  --cyber-dark: #0f172a;
+  --cyber-critical: #dc2626;
+  --cyber-high: #ea580c;
+  --cyber-medium: #ca8a04;
+  --cyber-low: #16a34a;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* Risk badge styles */
+.risk-critical { background-color: #dc2626; color: white; }
+.risk-high { background-color: #ea580c; color: white; }
+.risk-medium { background-color: #ca8a04; color: white; }
+.risk-low { background-color: #16a34a; color: white; }
+
+/* Score gauge animation */
+@keyframes scoreReveal {
+  from { stroke-dashoffset: 283; }
+}
+
+/* Card hover effect */
+.hover-lift { transition: transform 0.2s, box-shadow 0.2s; }
+.hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+
+/* Sidebar active state */
+.sidebar-active { background-color: #1e40af; color: white; }
+
+/* Tab active state */
+.tab-active { border-bottom: 3px solid #1e40af; color: #1e40af; font-weight: 600; }
+
+/* Progress bar animation */
+@keyframes progressFill {
+  from { width: 0%; }
+}
+
+/* Phase colors for roadmap */
+.phase-30 { border-left: 4px solid #dc2626; }
+.phase-90 { border-left: 4px solid #ea580c; }
+.phase-6m { border-left: 4px solid #ca8a04; }
+.phase-12m { border-left: 4px solid #16a34a; }
+
+/* Professional print styles */
+@media print {
+  .no-print { display: none !important; }
+  body { font-size: 12px; }
+}
+
+/* Pulse animation for critical items */
+@keyframes pulse-critical {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.pulse-critical { animation: pulse-critical 2s infinite; }
