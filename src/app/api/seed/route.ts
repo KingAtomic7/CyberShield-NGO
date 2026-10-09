@@ -10,6 +10,11 @@ import { generateRecommendations } from "@/lib/recommendations";
 import { defaultRoadmapItems, policyTemplates, defaultKPIs } from "@/lib/default-data";
 
 export async function POST(request: NextRequest) {
+  // Demo seeding creates known administrator credentials. Never expose it in production.
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   try {
     // Check if demo data already exists
     const existingAdmin = await db.query.users.findFirst({
